@@ -15,6 +15,7 @@ import routerAPI from "./routes/routes.js";
 import __dirname from "./utils.js";
 import config from "./config.js";
 import { addLogger } from "./middlewares/logger.js";
+import { logger } from "./utils.js";
 
 // Initialization
 const { DB_USER, DB_PASS, DB_NAME, DB_URL, SESSION_SECRET } = config;
@@ -65,6 +66,16 @@ database.connect();
 
 // Routes
 routerAPI(app);
+app.get("/loggerTest", (req, res) => {
+	logger.debug("This is a debug log");
+	logger.http("This is an HTTP log");
+	logger.info("This is an info log");
+	logger.warning("This is a warning log");
+	logger.error("This is an error log");
+	logger.fatal("This is a fatal log");
+
+	res.send("Logger test completed");
+});
 
 const httpServer = app.listen(PORT, (req, res) => {
 	console.log(`Server listening on port ${PORT}`);

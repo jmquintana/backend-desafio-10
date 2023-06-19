@@ -10,6 +10,7 @@ const config = {
 	CLIENT_SECRET: process.env.CLIENT_SECRET,
 	CLIENT_ID: process.env.CLIENT_ID,
 	CALLBACK_URL: process.env.CALLBACK_URL,
+	ENV: process.env.NODE_ENV,
 };
 
 export default config;

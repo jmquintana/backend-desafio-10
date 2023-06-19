@@ -3,7 +3,8 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import bcrypt from "bcrypt";
 import { faker } from "@faker-js/faker";
-
+import winston from "winston";
+import config from "./config.js";
 // faker.locale = "es";
 
 export const generateUser = () => {
@@ -62,4 +63,64 @@ export const isValidPassword = (user, password) =>
 	bcrypt.compareSync(password, user.password);
 
 export const uploader = multer({ storage });
+
+// Logger
+const customLevelOptions = {
+	levels: {
+		fatal: 0,
+		error: 1,
+		warning: 2,
+		info: 3,
+		http: 4,
+		debug: 5,
+	},
+	colors: {
+		debug: "blue",
+		http: "green",
+		info: "cyan",
+		warning: "yellow",
+		error: "red",
+		fatal: "magenta",
+	},
+};
+
+const devLogger = winston.createLogger({
+	levels: customLevelOptions.levels,
+	format: winston.format.json(),
+	transports: [
+		new winston.transports.Console({
+			level: "debug",
+			format: winston.format.combine(
+				winston.format.colorize({
+					colors: customLevelOptions.colors,
+				}),
+				winston.format.simple()
+			),
+		}),
+	],
+});
+
+const prodLogger = winston.createLogger({
+	levels: customLevelOptions.levels,
+	format: winston.format.json(),
+	transports: [
+		new winston.transports.Console({
+			level: "info",
+			format: winston.format.combine(
+				winston.format.colorize({
+					colors: customLevelOptions.colors,
+				}),
+				winston.format.simple()
+			),
+		}),
+		new winston.transports.File({
+			filename: "logs/errors.log",
+			level: "error",
+			format: winston.format.simple(),
+		}),
+	],
+});
+
+export const logger = config.ENV === "development" ? devLogger : prodLogger;
+
 export default __dirname;
