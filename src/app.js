@@ -7,13 +7,14 @@ import morgan from "morgan";
 import passport from "passport";
 import initializePassport from "./auth/passport.js";
 import socket from "./socket.js";
-import productsRouter from "./routes/products.router.js";
+// import productsRouter from "./routes/products.router.js";
 // import cartsRouter from "./routes/carts.router.js";
 // import viewsRouter from "./routes/views.router.js";
 // import sessionsRouter from "./routes/sessions.router.js";
 import routerAPI from "./routes/routes.js";
 import __dirname from "./utils.js";
 import config from "./config.js";
+import { addLogger } from "./middlewares/logger.js";
 
 // Initialization
 const { DB_USER, DB_PASS, DB_NAME, DB_URL, SESSION_SECRET } = config;
@@ -56,7 +57,8 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/", express.static(`${__dirname}/public`));
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
+app.use(addLogger);
 
 // Database connection
 database.connect();

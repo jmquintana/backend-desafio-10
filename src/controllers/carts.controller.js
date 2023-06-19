@@ -15,8 +15,6 @@ export async function renderCarts(req, res) {
 	const user = req.session.user || "guest";
 	result.carts = await cartsService.getCarts();
 	result.user = user;
-	console.log({ result });
-	console.log(result.carts[0].products);
 	return res.render("carts", result);
 }
 
